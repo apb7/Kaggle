@@ -7,35 +7,55 @@ df_train=df_train.drop(["label"],axis=1)
 features_train=df_train.as_matrix()
 df_test=pd.read_csv("test.csv")
 features_test=df_test.as_matrix()
-#print(features_train)
-#print(type(labels_train))
-#print(features_test)
+
+features_train=features_train.astype(np.float)
+features_test=features_test.astype(np.float)
+#labels_train=labels_train.astype(np.float)
+
+print(features_train)
+print(labels_train)
+print(features_test)
+
+from sklearn.preprocessing import MinMaxScaler as mms
+scalar=mms()
+features_train=scalar.fit_transform(features_train)
+features_test=scalar.fit_transform(features_test)
+#labels_train=scalar.fit_transform(labels_train)
+
+
+print(features_train)
+print(labels_train)
+print(features_test)
 
 def support_vector_classifier(f_train,l_train,f_test):
     from sklearn.grid_search import GridSearchCV as gscv
     from sklearn.svm import  SVC
-    #param={'kernel':('linear','rbf'),'C':[1,2,5,10]}
-    #svr=SVC()
-    #clf=gscv(svr,param_grid=param)
-    print("#############################1")
-    clf=SVC(kernel='linear')
+    import time
+    param={'kernel':('linear','rbf'),'C':[1,2,5,10,15,20]}
+    svr=SVC()
+    clf=gscv(svr,param_grid=param)
+    #clf=SVC(kernel='linear')
+    start_time=time.time()
     clf.fit(f_train,l_train)
-    print("#############################2")
+    print("Training Time: %s seconds"%(time.time()-start_time))
+    start_time=time.time()
     pred=clf.predict(f_test)
-    #print(clf.best_params_)
-    print("#############################3")
+    print("Predicting Time: %s seconds"%(time.time()-start_time))
+    print(clf.best_params_)
+
     return pred
 
 
 def knn(f_train,l_train,f_test):
     from sklearn.neighbors import KNeighborsClassifier as knc
+    import time
     clf=knc(n_neighbors=3)
-    print("Starting Fitting!")
+    start_time=time.time()
     clf.fit(f_train,l_train)
-    print("Fitting Complete!")
-    print("Pred Started!")
+    print("Training Time: %s seconds"%(time.time()-start_time))
+    start_time=time.time()
     pre=clf.predict(f_test)
-    print("Pred Ended!")
+    print("Predicting Time: %s seconds"%(time.time()-start_time))
     return pre
 
 def writer(pred):
@@ -50,6 +70,6 @@ def writer(pred):
     df_result.columns = ["ImageId", "Label"]
     df_result.to_csv(path_or_buf="output.csv", index=False)
 
-#pred=support_vector_classifier(features_train,labels_train,features_test)
-pred=knn(features_train,labels_train,features_test)
+pred=support_vector_classifier(features_train,labels_train,features_test)
+#pred=knn(features_train,labels_train,features_test)
 writer(pred)
