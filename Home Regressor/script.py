@@ -2,7 +2,7 @@ import pandas
 import matplotlib.pyplot as plt
 import numpy as np
 df_train=pandas.read_csv("train.csv")
-labels_train=df_train.as_matrix(["SalePrice"])
+labels_train=df_train.as_matrix(["SalePrice"]).ravel()
 df_train=df_train.drop(["Id","SalePrice"],axis=1)
 df_train=pandas.get_dummies(df_train,columns=['MSZoning', 'Street', 'LotShape', 'LandContour', 'Utilities',
        'LotConfig', 'LandSlope', 'Neighborhood', 'Condition1', 'Condition2',
@@ -49,7 +49,7 @@ def writer(pred):
     txt = []
     j = 1461
     for i in range(0,len(pred)):
-        txt.append([str(j), str(pred[i][0])])
+        txt.append([str(j), str(pred[i])])
         j += 1
     print(txt)
     df_result = pandas.DataFrame(txt)
