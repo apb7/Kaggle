@@ -1,5 +1,5 @@
 # Kaggle
-Solutions to problems on Kaggle  
-Follow me on Kaggle: [apurvb][apb]
+Solutions to standard problems on Kaggle  
+Kaggle handle: [apurvb][apb]
 
 [apb]:https://www.kaggle.com/apurvb
